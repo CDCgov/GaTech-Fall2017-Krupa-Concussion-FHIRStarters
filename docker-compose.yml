@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  fhirstartersapp:
+    image: fhirstartersapp
+    restart: always
+    container_name: mtbiwebapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    build:
+      context: ./fhirStartersApp/fhirStartersApp
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - 8083:80
+  db:
+    image: mysql
+    restart: always
+    container_name: mtbidbmysql
+    environment:
+        MYSQL_ROOT_PASSWORD: crazyrootpssw0rdthatnooneshouldbeabletoguesseverforeverever
+        MYSQL_DATABASE: mtbicds
+        MYSQL_USER: fhirstarter
+        MYSQL_PASSWORD: superlongmtbipassword
+    ports:
+      - 3306:3306
+  fhir:
+    image: bwells30/mtbi:mtbifhirTestVersion1
+    restart: always
+    container_name: mtbifhir
+    ports:
+      - 8080:8080

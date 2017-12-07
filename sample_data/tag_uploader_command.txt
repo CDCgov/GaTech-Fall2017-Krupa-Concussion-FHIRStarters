@@ -1,0 +1,1 @@
+node tag-uploader -d ..\..\mTBI\sample_data\synthetic\ -t initial-tag1 -S http://localhost:8080/baseDstu3 --validate

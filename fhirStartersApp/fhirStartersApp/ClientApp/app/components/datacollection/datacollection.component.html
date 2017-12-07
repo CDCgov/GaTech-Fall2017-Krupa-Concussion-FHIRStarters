@@ -1,0 +1,443 @@
+<p *ngIf="!patient"><em>Loading...</em></p>
+
+<h2>mTBI Screening <span [hidden]="!patientName">for {{patientName}}</span></h2>
+
+<div *ngIf="someFHIR">
+    <div class='alert alert-warning' role='alert'>
+        Some values were obtained automatically and are highlighted in yellow.  <a href="#" class="alert-link" (click)="highlightFHIR = !highlightFHIR">Click here</a> to toggle highlighting.
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="input-group">
+            <span class="input-group-addon" title="Age" [class.fromFHIR]="patient.age.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('Age')" class="data-needed">!</span>
+                Age
+            </span>
+            <input type="number" min="0" max="150" class="form-control" (change)="putData()" [(ngModel)]="this.patient.age.value!.value" aria-label="Age (years)">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ageUnit[this.patient.age.value!.unit]}} <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a (click)="setAgeUnit(ageUnit.Months)">Months</a></li>
+                    <li><a (click)="setAgeUnit(ageUnit.Years)">Years</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">
+        <h3>Tests</h3>
+
+        <div class="input-group">
+            <span class="input-group-addon" title="Glasgow Coma Scale" [class.fromFHIR]="patient.data.GlasgowComaScale.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('GlasgowComaScale')" class="data-needed">!</span>
+                GCS
+            </span>
+            <input type="number" min="0" max="20" class="form-control" (change)="putData()" [(ngModel)]="this.patient.data.GlasgowComaScale.value" aria-label="GCS">
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Cranial CT Imaging</div>
+            <div class="input-group">
+                <span class="input-group-addon form-label" title="Cranial CT Imaging Taken" [class.fromFHIR]="patient.data.CtImagingTaken.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('CtImagingTaken')" class="data-needed">!</span>
+                    Cranial CT Imaging Taken
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CtImagingTaken.value == 1 }" (click)="patient.data.CtImagingTaken.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CtImagingTaken.value == 2 }" (click)="patient.data.CtImagingTaken.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CtImagingTaken.value == 0 }" (click)="patient.data.CtImagingTaken.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div *ngIf="this.patient.data.CtImagingTaken.value == 1" class="input-group">
+                <span class="input-group-addon form-label" title="Cranial CT Imaging Results Abnormal (any intracranial hemorrhage, cerebral edema, pneumocephalus, or any skull fracture)?" [class.fromFHIR]="patient.data.CtImagingResultsAbnormal.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('CtImagingResultsAbnormal')" class="data-needed">!</span>
+                    Cranial CT Results Abnormal?
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CtImagingResultsAbnormal.value == 1 }" (click)="patient.data.CtImagingResultsAbnormal.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CtImagingResultsAbnormal.value == 2 }" (click)="patient.data.CtImagingResultsAbnormal.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CtImagingResultsAbnormal.value == 0 }" (click)="patient.data.CtImagingResultsAbnormal.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Cranial MRI</div>
+            <div class="input-group">
+                <span class="input-group-addon form-label" title="Cranial MRI Taken" [class.fromFHIR]="patient.data.MriTaken.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('MriTaken')" class="data-needed">!</span>
+                    Cranial MRI Taken
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MriTaken.value == 1 }" (click)="patient.data.MriTaken.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MriTaken.value == 2 }" (click)="patient.data.MriTaken.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MriTaken.value == 0 }" (click)="patient.data.MriTaken.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div *ngIf="this.patient.data.MriTaken.value == 1" class="input-group">
+                <span class="input-group-addon form-label" title="Cranial MRI Results Abnormal?" [class.fromFHIR]="patient.data.MriResultsAbnormal.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('MriResultsAbnormal')" class="data-needed">!</span>
+                    Cranial MRI Abnormal?
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MriResultsAbnormal.value == 1 }" (click)="patient.data.MriResultsAbnormal.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MriResultsAbnormal.value == 2 }" (click)="patient.data.MriResultsAbnormal.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MriResultsAbnormal.value == 0 }" (click)="patient.data.MriResultsAbnormal.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-4">
+        <h3>Symptoms</h3>
+
+        <div class="field-group">
+            <div class="field-group-header">Skull Fracture</div>
+            <div id="SignsOfPalpableSkullFracture" class="input-group">
+                <span class="input-group-addon form-label" title="Palpable Skull Fracture" [class.fromFHIR]="patient.data.SignsOfPalpableSkullFracture.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SignsOfPalpableSkullFracture')" class="data-needed">!</span>
+                    Palpable Skull Fracture
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfPalpableSkullFracture.value == 1 }" (click)="patient.data.SignsOfPalpableSkullFracture.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfPalpableSkullFracture.value == 2 }" (click)="patient.data.SignsOfPalpableSkullFracture.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfPalpableSkullFracture.value == 0 }" (click)="patient.data.SignsOfPalpableSkullFracture.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="SignsOfBasilarSkullFracture" class="input-group">
+                <span class="input-group-addon form-label" title="Basilar Skull Fracture" [class.fromFHIR]="patient.data.SignsOfBasilarSkullFracture.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SignsOfBasilarSkullFracture')" class="data-needed">!</span>
+                    Basilar Skull Fracture
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfBasilarSkullFracture.value == 1 }" (click)="patient.data.SignsOfBasilarSkullFracture.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfBasilarSkullFracture.value == 2 }" (click)="patient.data.SignsOfBasilarSkullFracture.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfBasilarSkullFracture.value == 0 }" (click)="patient.data.SignsOfBasilarSkullFracture.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="SignsOfOtherSkullFracture" class="input-group">
+                <span class="input-group-addon form-label" title="Other Skull Fracture" [class.fromFHIR]="patient.data.SignsOfOtherSkullFracture.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SignsOfOtherSkullFracture')" class="data-needed">!</span>
+                    Other Skull Fracture
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfOtherSkullFracture.value == 1 }" (click)="patient.data.SignsOfOtherSkullFracture.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfOtherSkullFracture.value == 2 }" (click)="patient.data.SignsOfOtherSkullFracture.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfOtherSkullFracture.value == 0 }" (click)="patient.data.SignsOfOtherSkullFracture.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Loss of Consciousness</div>
+            <div id="LossOfConsciousness" class="input-group">
+                <span class="input-group-addon form-label" title="Loss of Consciousness" [class.fromFHIR]="patient.data.LossOfConsciousness.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('LossOfConsciousness')" class="data-needed">!</span>
+                    LOC
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.LossOfConsciousness.value == 1 }" (click)="patient.data.LossOfConsciousness.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.LossOfConsciousness.value == 2 }" (click)="patient.data.LossOfConsciousness.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.LossOfConsciousness.value == 0 }" (click)="patient.data.LossOfConsciousness.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div *ngIf="this.patient.data.LossOfConsciousness.value == 1" class="input-group">
+                <div class="input-group">
+                    <span class="input-group-addon" title="Loss of Consciousness (time)" [class.fromFHIR]="patient.data.LossOfConsciousnessTime.source == 1 && highlightFHIR">
+                        <span *ngIf="this.appService.fieldRequired('LossOfConsciousnessTime')" class="data-needed">!</span>
+                        LOC Time
+                    </span>
+                    <input type="number" size="3" class="form-control" (change)="putData()" [(ngModel)]="this.patient.data.LossOfConsciousnessTime.value!.value" aria-label="LOC Time">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{timeUnit[this.patient.data.LossOfConsciousnessTime.value!.unit]}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a (click)="setLocTimeUnit(timeUnit.Seconds)">Seconds</a></li>
+                            <li><a (click)="setLocTimeUnit(timeUnit.Minutes)">Minutes</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Scalp Hematoma</div>
+            <div id="OptScalpHematoma" class="input-group">
+                <span class="input-group-addon form-label" title="Scalp Hematoma (Occipital, Parietal, or Temporal)" [class.fromFHIR]="patient.data.OptScalpHematoma.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('OptScalpHematoma')" class="data-needed">!</span>
+                    O/P/T Scalp Hematoma
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.OptScalpHematoma.value == 1 }" (click)="patient.data.OptScalpHematoma.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.OptScalpHematoma.value == 2 }" (click)="patient.data.OptScalpHematoma.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.OptScalpHematoma.value == 0 }" (click)="patient.data.OptScalpHematoma.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="OtherScalpHematoma" class="input-group">
+                <span class="input-group-addon form-label" title="Scalp Hematoma (Other)" [class.fromFHIR]="patient.data.OtherScalpHematoma.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('OtherScalpHematoma')" class="data-needed">!</span>
+                    Other Scalp Hematoma
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.OtherScalpHematoma.value == 1 }" (click)="patient.data.OtherScalpHematoma.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.OtherScalpHematoma.value == 2 }" (click)="patient.data.OtherScalpHematoma.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.OtherScalpHematoma.value == 0 }" (click)="patient.data.OtherScalpHematoma.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Headaches</div>
+            <div id="AnyHeadaches" class="input-group">
+                <span class="input-group-addon form-label" title="Any Headaches?" [class.fromFHIR]="patient.data.AnyHeadaches.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('AnyHeadaches')" class="data-needed">!</span>
+                    Headaches
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.AnyHeadaches.value == 1 }" (click)="patient.data.AnyHeadaches.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.AnyHeadaches.value == 2 }" (click)="patient.data.AnyHeadaches.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.AnyHeadaches.value == 0 }" (click)="patient.data.AnyHeadaches.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div *ngIf="this.patient.data.AnyHeadaches.value === 1" id="SevereHeadache" class="input-group">
+                <span class="input-group-addon form-label" title="Severe Headache" [class.fromFHIR]="patient.data.SevereHeadache.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SevereHeadache')" class="data-needed">!</span>
+                    Severe Headaches
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereHeadache.value == 1 }" (click)="patient.data.SevereHeadache.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereHeadache.value == 2 }" (click)="patient.data.SevereHeadache.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereHeadache.value == 0 }" (click)="patient.data.SevereHeadache.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Head Trauma Contusions</div>
+            <div id="MinorBluntHeadTraumaContusions" class="input-group">
+                <span class="input-group-addon form-label" title="Minor Blunt Head Trauma Contusions" [class.fromFHIR]="patient.data.MinorBluntHeadTraumaContusions.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('MinorBluntHeadTraumaContusions')" class="data-needed">!</span>
+                    Minor Contusions
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MinorBluntHeadTraumaContusions.value == 1 }" (click)="patient.data.MinorBluntHeadTraumaContusions.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MinorBluntHeadTraumaContusions.value == 2 }" (click)="patient.data.MinorBluntHeadTraumaContusions.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MinorBluntHeadTraumaContusions.value == 0 }" (click)="patient.data.MinorBluntHeadTraumaContusions.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div *ngIf="this.patient.data.MinorBluntHeadTraumaContusions.value == 1" id="MinorBluntHeadTraumaContusionsSmallAndIsolated" class="input-group">
+                <span class="input-group-addon form-label" title="Minor Blunt Head Trauma Contusions, Small and Isolated" [class.fromFHIR]="patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('MinorBluntHeadTraumaContusionsSmallAndIsolated')" class="data-needed">!</span>
+                    Minor Contusions Small/Isolated?
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.value == 1 }" (click)="patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.value == 2 }" (click)="patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.value == 0 }" (click)="patient.data.MinorBluntHeadTraumaContusionsSmallAndIsolated.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="CerebralContusionsSuspected" class="input-group">
+                <span class="input-group-addon form-label" title="Cerebral Contusions Suspected" [class.fromFHIR]="patient.data.CerebralContusionsSuspected.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('CerebralContusionsSuspected')" class="data-needed">!</span>
+                    Cerebral Contusions Suspected
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CerebralContusionsSuspected.value == 1 }" (click)="patient.data.CerebralContusionsSuspected.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CerebralContusionsSuspected.value == 2 }" (click)="patient.data.CerebralContusionsSuspected.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.CerebralContusionsSuspected.value == 0 }" (click)="patient.data.CerebralContusionsSuspected.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <div class="field-group-header">Other Symptoms</div>
+            <div id="WorseningSymptoms" class="input-group">
+                <span class="input-group-addon form-label" title="Worsening Symptoms" [class.fromFHIR]="patient.data.WorseningSymptoms.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('WorseningSymptoms')" class="data-needed">!</span>
+                    Worsening Symptoms
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.WorseningSymptoms.value == 1 }" (click)="patient.data.WorseningSymptoms.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.WorseningSymptoms.value == 2 }" (click)="patient.data.WorseningSymptoms.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.WorseningSymptoms.value == 0 }" (click)="patient.data.WorseningSymptoms.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="LightNoiseSensitivity" class="input-group">
+                <span class="input-group-addon form-label" title="Light/Noise Sensitivity" [class.fromFHIR]="patient.data.LightNoiseSensitivity.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('LightNoiseSensitivity')" class="data-needed">!</span>
+                    Light/Noise Sensitivity
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.LightNoiseSensitivity.value == 1 }" (click)="patient.data.LightNoiseSensitivity.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.LightNoiseSensitivity.value == 2 }" (click)="patient.data.LightNoiseSensitivity.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.LightNoiseSensitivity.value == 0 }" (click)="patient.data.LightNoiseSensitivity.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="SevereMechanismOfInjury" class="input-group">
+                <span class="input-group-addon form-label" title="Severe Mechanism of Injury" [class.fromFHIR]="patient.data.SevereMechanismOfInjury.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SevereMechanismOfInjury')" class="data-needed">!</span>
+                    Severe Mechanism of Injury
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereMechanismOfInjury.value == 1 }" (click)="patient.data.SevereMechanismOfInjury.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereMechanismOfInjury.value == 2 }" (click)="patient.data.SevereMechanismOfInjury.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereMechanismOfInjury.value == 0 }" (click)="patient.data.SevereMechanismOfInjury.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="AbnormalBehaviorPerParentalAssessment" class="input-group">
+                <span class="input-group-addon form-label" title="Acting Abnormally, Per Parents" [class.fromFHIR]="patient.data.AbnormalBehaviorPerParentalAssessment.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('AbnormalBehaviorPerParentalAssessment')" class="data-needed">!</span>
+                    Acting Abnormally
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.AbnormalBehaviorPerParentalAssessment.value == 1 }" (click)="patient.data.AbnormalBehaviorPerParentalAssessment.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.AbnormalBehaviorPerParentalAssessment.value == 2 }" (click)="patient.data.AbnormalBehaviorPerParentalAssessment.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.AbnormalBehaviorPerParentalAssessment.value == 0 }" (click)="patient.data.AbnormalBehaviorPerParentalAssessment.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="Vomiting" class="input-group">
+                <span class="input-group-addon form-label" title="Vomiting" [class.fromFHIR]="patient.data.Vomiting.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('Vomiting')" class="data-needed">!</span>
+                    Vomiting
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.Vomiting.value == 1 }" (click)="patient.data.Vomiting.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.Vomiting.value == 2 }" (click)="patient.data.Vomiting.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.Vomiting.value == 0 }" (click)="patient.data.Vomiting.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+
+            <div id="SignsOfAlteredMentalStatus" class="input-group">
+                <span class="input-group-addon form-label" title="Altered Mental Status" [class.fromFHIR]="patient.data.SignsOfAlteredMentalStatus.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SignsOfAlteredMentalStatus')" class="data-needed">!</span>
+                    Altered Mental Status
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfAlteredMentalStatus.value == 1 }" (click)="patient.data.SignsOfAlteredMentalStatus.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfAlteredMentalStatus.value == 2 }" (click)="patient.data.SignsOfAlteredMentalStatus.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SignsOfAlteredMentalStatus.value == 0 }" (click)="patient.data.SignsOfAlteredMentalStatus.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        
+            <div id="SevereSymptoms" class="input-group">
+                <span class="input-group-addon form-label" title="Severe Symptoms" [class.fromFHIR]="patient.data.SevereSymptoms.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('SevereSymptoms')" class="data-needed">!</span>
+                    Severe Symptoms
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereSymptoms.value == 1 }" (click)="patient.data.SevereSymptoms.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereSymptoms.value == 2 }" (click)="patient.data.SevereSymptoms.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.SevereSymptoms.value == 0 }" (click)="patient.data.SevereSymptoms.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        
+            <div id="PersistentMentalStatusChanges" class="input-group">
+                <span class="input-group-addon form-label" title="Persistent Mental Status Changes" [class.fromFHIR]="patient.data.PersistentMentalStatusChanges.source == 1 && highlightFHIR">
+                    <span *ngIf="this.appService.fieldRequired('PersistentMentalStatusChanges')" class="data-needed">!</span>
+                    Persistent Mental Status Changes
+                </span>
+                <div class="input-group-btn btn-group tristate">
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.PersistentMentalStatusChanges.value == 1 }" (click)="patient.data.PersistentMentalStatusChanges.value = 1; putData()">Yes</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.PersistentMentalStatusChanges.value == 2 }" (click)="patient.data.PersistentMentalStatusChanges.value = 2; putData()">No</button>
+                    <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.PersistentMentalStatusChanges.value == 0 }" (click)="patient.data.PersistentMentalStatusChanges.value = 0; putData()">Unknown</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-4">
+        <h3>History</h3>
+        <div id="ConcussionHistory" class="input-group">
+            <span class="input-group-addon form-label" title="Concussion History" [class.fromFHIR]="patient.data.ConcussionHistory.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('ConcussionHistory')" class="data-needed">!</span>
+                Concussion History
+            </span>
+            <div class="input-group-btn btn-group tristate">
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.ConcussionHistory.value == 1 }" (click)="patient.data.ConcussionHistory.value = 1; putData()">Yes</button>
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.ConcussionHistory.value == 2 }" (click)="patient.data.ConcussionHistory.value = 2; putData()">No</button>
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.ConcussionHistory.value == 0 }" (click)="patient.data.ConcussionHistory.value = 0; putData()">Unknown</button>
+            </div>
+        </div>
+
+        <div id="ChronicDiseases" class="input-group">
+            <span class="input-group-addon form-label" title="Chronic Diseases (asthma, diabetes, etc)" [class.fromFHIR]="patient.data.ChronicDiseases.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('ChronicDiseases')" class="data-needed">!</span>
+                Chronic Diseases
+            </span>
+            <div class="input-group-btn btn-group tristate">
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.ChronicDiseases.value == 1 }" (click)="patient.data.ChronicDiseases.value = 1; putData()">Yes</button>
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.ChronicDiseases.value == 2 }" (click)="patient.data.ChronicDiseases.value = 2; putData()">No</button>
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.ChronicDiseases.value == 0 }" (click)="patient.data.ChronicDiseases.value = 0; putData()">Unknown</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Recommendations</h3>
+        <div id="RestRecommended" class="input-group">
+            <span class="input-group-addon form-label" title="Rest Recommended" [class.fromFHIR]="patient.data.RestRecommended.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('RestRecommended')" class="data-needed">!</span>
+                Recommend Rest
+            </span>
+            <div class="input-group-btn btn-group tristate">
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.RestRecommended.value }" (click)="patient.data.RestRecommended.value = true; putData()">Yes</button>
+                <button class="btn btn-default" [ngClass]="{'btn-primary': !patient.data.RestRecommended.value }" (click)="patient.data.RestRecommended.value = false; putData()">No</button>
+            </div>
+        </div>
+
+        <div *ngIf="this.patient.data.RestRecommended.value == true" id="RestRecommendedDays" class="input-group">
+            <span class="input-group-addon form-label" title="Rest Recommended (Days)" [class.fromFHIR]="patient.data.RestRecommendedDays.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('RestRecommendedDays')" class="data-needed">!</span>
+                Rest Days
+            </span>
+            <input type="number" min="0" class="form-control" (change)="putData()" [(ngModel)]="this.patient.data.RestRecommendedDays.value" aria-label="Rest Days">
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <h3>Instructions</h3>
+        <div id="IncludeSchoolRecommendations" class="input-group">
+            <span class="input-group-addon form-label" title="Include School Recommendations" [class.fromFHIR]="patient.data.IncludeSchoolRecommendations.source == 1 && highlightFHIR">
+                <span *ngIf="this.appService.fieldRequired('IncludeSchoolRecommendations')" class="data-needed">!</span>
+                Include School Instructions
+            </span>
+            <div class="input-group-btn btn-group tristate">
+                <button class="btn btn-default" [ngClass]="{'btn-primary': patient.data.IncludeSchoolRecommendations.value }" (click)="patient.data.IncludeSchoolRecommendations.value = true; putData()">Yes</button>
+                <button class="btn btn-default" [ngClass]="{'btn-primary': !patient.data.IncludeSchoolRecommendations.value }" (click)="patient.data.IncludeSchoolRecommendations.value = false; putData()">No</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="CustomDischargeInstructions">Other Discharge Instructions</label>
+            <textarea class="form-control" rows="5" id="CustomDischargeInstructions" [(ngModel)]="patient.data.CustomDischargeInstructions.value"></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-primary btn-block btn-submit" [disabled]="loading" (click)="submit()">
+            <span *ngIf="loading">Please wait...</span>
+            <span *ngIf="!loading">Submit</span>
+        </button>
+    </div>
+</div>
+
+

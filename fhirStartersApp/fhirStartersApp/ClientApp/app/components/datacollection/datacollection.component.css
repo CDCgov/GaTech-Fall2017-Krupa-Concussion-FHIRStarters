@@ -1,0 +1,74 @@
+h2 {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+h3 {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
+.btn-group {
+  margin: 5px;
+}
+.input-group {
+  margin: 5px;
+}
+
+input:invalid {
+  background-color: #ff6666;
+  color: white;
+}
+
+.fromFHIR {
+  background-color: #ffff88;
+}
+
+.filler {
+    display: table-cell;
+    width: 1%
+}
+
+.btn-submit {
+    margin-top: 20px;
+    margin-bottom: 35px;
+}
+
+@media only screen and (min-width : 320px) {
+    .form-label {
+        width: 180px;
+    }
+}
+
+@media only screen and (min-width : 480px) {
+    .form-label {
+        width: 240px;
+    }
+}
+
+
+.tristate {
+    width: auto;
+}
+
+.data-needed {
+    background-color: red;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.field-group {
+    border: 2px solid gray;
+}
+.field-group .field-group-header {
+    font-size: 12pt;
+    text-align: center;
+    background-color: gray;
+    color: white;
+}
