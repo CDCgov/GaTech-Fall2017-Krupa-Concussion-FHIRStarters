@@ -14,9 +14,9 @@ Semester team name: FHIR Starters
 * Brian Wells (Developer)
 
 ## Source Code Repository
-Source code for the project may be found on Georgia Tech's GitHub site at the following link:
+Source code for the project may be found on GitHub at the following link:
 
-https://github.gatech.edu/gt-hit-fall2017/CONCUSSION-AND-TRAUMATIC-BRAIN-INJURY-IN-PEDIATRIC-PATIENTS
+https://github.com/CDCgov/GaTech-Fall2017-Krupa-Concussion-FHIRStarters
 
 ## Repository Structure
 

@@ -20,9 +20,9 @@ Semester team name: FHIRStarters
 * Jon Bidwell (Georgia Tech)
 
 ## Source Code Repository
-Source code for the project may be found on Georgia Tech's GitHub site at the following link:
+Source code for the project may be found on GitHub at the following link:
 
-https://github.gatech.edu/gt-hit-fall2017/CONCUSSION-AND-TRAUMATIC-BRAIN-INJURY-IN-PEDIATRIC-PATIENTS
+https://github.com/CDCgov/GaTech-Fall2017-Krupa-Concussion-FHIRStarters
 
 ## Thank You
 Thank you to Juliet, Kelly, and all others who provided guidance during development. It would not have been possible without them.
