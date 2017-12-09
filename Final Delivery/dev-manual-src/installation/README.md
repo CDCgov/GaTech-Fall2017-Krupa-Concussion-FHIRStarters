@@ -4,7 +4,7 @@ The following instructions will install the app and all dependencies by utilizin
 
  1. If you don't already have docker (<https://www.docker.com>) installed, do so.
  2. Clone this repo.
- 3. In a command window, navigate to the directory CONCUSSION-AND-TRAUMATIC-BRAIN-INJURY-IN-PEDIATRIC-PATIENTS
+ 3. In a command window, navigate to the directory GaTech-Fall2017-Krupa-Concussion-FHIRStarters
  4. Run `docker-compose up`
  5. Wait for everything to build and startup.
  6. In a browser, navigate to <http://localhost:8083>
